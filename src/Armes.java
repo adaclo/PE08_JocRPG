@@ -48,6 +48,12 @@ public class Armes {
     public void setIsMagic(boolean isMagic) {
         this.isMagic=isMagic;
     }
+
+    public String toString() {
+        String info="";
+        info="ID="+this.ID+"\nType="+this.type+"\nDamage="+this.damage+"\nMagic="+this.isMagic;
+        return info;
+    }
     
 }
 
