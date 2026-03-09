@@ -13,7 +13,8 @@ public class Personatges {
     private int intelligence;
     private int wisdom;
     private int charisma;
-    private int activeWeapon;
+    private int luck;
+    private Armes activeWeapon;
     
     public void setID(int ID) {
         this.ID=ID;
@@ -54,9 +55,13 @@ public class Personatges {
     public double getHealth() {
         return this.health;
     }
+
+    public void setDefaultHealth() {
+        this.health=this.constitution*50;
+    }
     
-    public void setMana(int mana) {
-        this.mana=mana;
+    public void setMana() {
+        this.mana=this.intelligence*30;
     }
 
     public int getMana() {
@@ -111,17 +116,55 @@ public class Personatges {
         return this.charisma;
     }
     
-    public void setActiveWeapon(int activeWeapon) {
-        this.activeWeapon=activeWeapon;
+    public void setActiveWeapon(Armes activeWeapon) {
+        if (activeWeapon.getIsMagic()==true&&getIntelligence()<10) {
+            System.out.println("You cannot equip this weapon, needed intelligence >=10");
+        } else {
+            this.activeWeapon=activeWeapon;
+        }
     }
 
-    public int getActiveWeapon() {
+    public Armes getActiveWeapon() {
         return this.activeWeapon;
+    }
+    
+    public void setLuck(int luck) {
+        this.luck=(int)(Math.random()*3)+1;
+    }
+
+    public int getLuck() {
+        return this.luck;
+    }
+
+    public int calcDamage(int damage) {
+        if (didDodge()) {
+            damage=0;
+        }
+        return damage;
+    }
+
+    public boolean didDodge() {
+        boolean dodge = false;
+        int randomNum = (int)(Math.random()*2);
+        if (randomNum==0) {
+            dodge=true;
+        }
+        return dodge;
+    }
+
+    public void regenHealth() {
+        double maxHealth=this.constitution*50;
+        double expectedHealth=this.health+this.constitution*3;
+        if (expectedHealth>maxHealth) {
+            this.health=maxHealth;
+        } else {
+            this.health=expectedHealth;
+        }
     }
 
     public String toString() {
         String info="";
-        info="ID="+this.ID+"\nType="+this.type+"\nName="+this.name+"\nAge="+this.age+"\nHealth="+this.health+"\nMana="+this.mana+"\nStrength="+this.strength+"\nDexterity="+this.dexterity+"\nConstitution="+this.constitution+"\nIntelligence="+this.intelligence+"\nWisdom="+this.wisdom+"\nCharisma="+this.charisma;
+        info="ID="+this.ID+"\nType="+this.type+"\nName="+this.name+"\nAge="+this.age+"\nHealth="+this.health+"\nMana="+this.mana+"\nStrength="+this.strength+"\nDexterity="+this.dexterity+"\nConstitution="+this.constitution+"\nIntelligence="+this.intelligence+"\nWisdom="+this.wisdom+"\nLuck="+this.luck+"\nCharisma="+this.charisma+"\nWeapon="+this.activeWeapon;
         return info;
     }
 }

@@ -3,14 +3,14 @@ package Activitats.PE08_AcarretaAdrian.src;
 public class Armes {
     private int ID;
     private String type;
-    private int damage;
+    private double damage;
     private boolean isMagic;
 
     public Armes() {
 
     }
 
-    public Armes(int ID,String type,int damage,boolean isMagic) {
+    public Armes(int ID,String type,double damage,boolean isMagic) {
         this.ID=ID;
         this.type=type;
         this.damage=damage;
@@ -33,11 +33,11 @@ public class Armes {
         this.type=type;
     }
 
-    public int getDamage() {
+    public double getDamage() {
         return this.damage;
     }
 
-    public void setDamage(int damage) {
+    public void setDamage(double damage) {
         this.damage=damage;
     }
 
