@@ -24,8 +24,13 @@ public class Personatges {
         return this.ID;
     }
     
-    public void setType(String type) {
-        this.type=type;
+    public boolean setType(String type) {
+        boolean validType=false;
+        if (type.equalsIgnoreCase("human")||type.equalsIgnoreCase("elf")||type.equalsIgnoreCase("orc")||type.equalsIgnoreCase("dwarf")) {
+            this.type=type;
+            validType=true;
+        }
+        return validType;
     }
 
     public String getType() {
@@ -116,12 +121,15 @@ public class Personatges {
         return this.charisma;
     }
     
-    public void setActiveWeapon(Armes activeWeapon) {
+    public boolean setActiveWeapon(Armes activeWeapon) {
+        boolean didChange=false;
         if (activeWeapon.getIsMagic()==true&&getIntelligence()<10) {
             System.out.println("You cannot equip this weapon, needed intelligence >=10");
         } else {
             this.activeWeapon=activeWeapon;
+            didChange=true;
         }
+        return didChange;
     }
 
     public Armes getActiveWeapon() {
@@ -129,18 +137,36 @@ public class Personatges {
     }
     
     public void setLuck(int luck) {
-        this.luck=(int)(Math.random()*3)+1;
+        this.luck=(int)(Math.random()*3)+1; 
     }
-
+    // 1Luck -> 1/5 to 2x damage
+    // 2Luck -> 1/4 to 2x damage
+    // 3Luck -> 1/3 to 2x damage
     public int getLuck() {
         return this.luck;
     }
 
     public int calcDamage(int damage) {
-        if (didDodge()) {
+        if (didDodge())
             damage=0;
-        }
+        if (calcLuck())
+            damage=damage*2;
         return damage;
+    }
+
+    public boolean calcLuck() {
+        int possibilities=0;
+        if (this.luck==1) {
+            possibilities=5;
+        } else if (this.luck==2) {
+            possibilities=4;
+        } else {
+            possibilities=3;
+        }
+        int randNum = (int)(Math.random()*possibilities); // choose random number, if randNum=0 -> 2x damage
+        if (randNum==0)
+            return true;
+        return false;
     }
 
     public boolean didDodge() {
@@ -155,10 +181,10 @@ public class Personatges {
     public void regenHealth() {
         double maxHealth=this.constitution*50;
         double expectedHealth=this.health+this.constitution*3;
-        if (expectedHealth>maxHealth) {
-            this.health=maxHealth;
+        if (expectedHealth>maxHealth) { // set health to max because it exceeds
+            setHealth(maxHealth);
         } else {
-            this.health=expectedHealth;
+            setHealth(expectedHealth);
         }
     }
 
