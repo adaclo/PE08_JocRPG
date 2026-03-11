@@ -65,8 +65,8 @@ public class Personatges {
         this.health=this.constitution*50;
     }
     
-    public void setMana() {
-        this.mana=this.intelligence*30;
+    public void setMana(int mana) {
+        this.mana=mana;
     }
 
     public int getMana() {
