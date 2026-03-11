@@ -16,6 +16,11 @@ public class JocRPG {
     public void principal() {
         ArrayList<Armes> allWeapons = new ArrayList<Armes>();
         ArrayList<Personatges> allCharacters = new ArrayList<Personatges>();
+
+        System.err.println("RPG GAME BY ADRIAN ACARRETA");
+        System.err.println("(1) Create character");
+        if (allCharacters.size()>=2)
+            System.err.println("(2) Play 1v1");
     }
 
     public void makeCharacter(ArrayList<Personatges> allCharacters,Scanner s) {
@@ -36,7 +41,7 @@ public class JocRPG {
                     autoStats(stats, statsName);
                     break;
                 case 2:
-                    
+                    manualStats(stats, statsName);
                     break;
             
                 default:
@@ -51,9 +56,63 @@ public class JocRPG {
         int wisdom=stats[4];
         int charisma=stats[5];
         int luck=setLuck();
-        double health;
-        int mana;
+        double health=setDefaultHealth(constitution);
+        int mana=setDefaultMana(intelligence);
         Armes activeWeapon;
+    }
+
+    public int chooseWeapon(ArrayList<Armes>allWeapons) {
+        int id=0;
+        int weapon=0;
+        int index=0;
+        boolean found=false;
+        if (allWeapons.size()!=0) {
+            showWeapons(allWeapons);
+            System.out.print("\nChoose one: ");
+            id=readInt();
+            while (!found&&index<allWeapons.size()) {
+                if (allWeapons.get(index).getID()==id) {
+                    weapon=id;
+                } else {index++;}
+            }
+        } else {
+            weapon=makeWeapon(allWeapons);
+        }
+        return weapon;
+    }
+
+    public int makeWeapon(ArrayList<Armes>allWeapons) {
+        int id=0;
+
+        return id;
+    }
+
+    public void showWeapons(ArrayList<Armes>allWeapons) {
+        for (int i=0;i<allWeapons.size();i++) {
+            System.out.println(allWeapons.get(i).toString());
+        }
+    }
+
+    public void manualStats(int[] stats,String[] statsName) {
+        int leftPoints=60;
+        boolean validPoints=false;
+        while (leftPoints!=0) {
+            for (int i=0;i<stats.length;i++) {
+                validPoints=false;
+                System.out.println("Left points: "+leftPoints);
+                while (!validPoints) {
+                    System.out.print("\nPlease choose the amount of points of "+statsName[i]+" you want to add (5-20): ");
+                    int randNum=readInt();
+                    if (randNum>=5&&randNum<=20) {
+                        stats[i]=+randNum;
+                        validPoints=true;
+                    }
+                }
+            }
+        }
+        for (int i=0;i<statsName.length;i++) {
+            System.out.println(statsName[i]+" have been set to "+stats[i]);
+        }
     }
 
     public void autoStats(int[] stats,String[] statsName) {
@@ -146,18 +205,6 @@ public class JocRPG {
             }
         }
         return type;
-    }
-
-    public void showCharacters(ArrayList<Personatges> allCharacters) {
-
-    }
-
-    public void makeWeapon(ArrayList<Armes> allWeapons) {
-
-    }
-
-    public void showWeapons(ArrayList<Armes> allWeapons) {
-
     }
 
     public int readInt() {
