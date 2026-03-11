@@ -15,6 +15,27 @@ public class Personatges {
     private int charisma;
     private int luck;
     private Armes activeWeapon;
+
+    public Personatges() {
+
+    }
+
+    public Personatges(int ID,String type,String name,int age,double health,int mana,int strength,int dexterity,int constitution,int intelligence,int wisdom,int charisma,int luck,Armes activeWeapon) {
+        this.ID=ID;
+        this.type=type;
+        this.name=name;
+        this.age=age;
+        this.health=health;
+        this.mana=mana;
+        this.strength=strength;
+        this.dexterity=dexterity;
+        this.constitution=constitution;
+        this.intelligence=intelligence;
+        this.wisdom=wisdom;
+        this.charisma=charisma;
+        this.luck=luck;
+        this.activeWeapon=activeWeapon;
+    }
     
     public void setID(int ID) {
         this.ID=ID;
@@ -24,13 +45,8 @@ public class Personatges {
         return this.ID;
     }
     
-    public boolean setType(String type) {
-        boolean validType=false;
-        if (type.equalsIgnoreCase("human")||type.equalsIgnoreCase("elf")||type.equalsIgnoreCase("orc")||type.equalsIgnoreCase("dwarf")) {
-            this.type=type;
-            validType=true;
-        }
-        return validType;
+    public void setType(String type) {
+        this.type=type;
     }
 
     public String getType() {
