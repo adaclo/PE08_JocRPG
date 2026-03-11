@@ -22,20 +22,67 @@ public class JocRPG {
         String type=chooseType();
         String name=chooseName();
         int age=chooseAge();
-        System.out.println("What do you prefer");
-        System.out.println("(1) Automatic asignment");
-        System.out.println("(2) Manual asignment");
-        int strength;
-        int dexterity;
-        int constitution;
-        int intelligence;
-        int wisdom;
-        int charisma;
-        int luck;
+        int[] stats = new int[6];
+        String[] statsName = {"Strength","Dexterity","Constitution","Intelligence","Wisdom","Charisma"};
+        int opt=0;
+        boolean validOpt=false;
+        while (!validOpt) {
+            System.out.println("What do you prefer");
+            System.out.println("(1) Automatic asignment");
+            System.out.println("(2) Manual asignment");
+            opt=readInt();
+            switch (opt) {
+                case 1:
+                    autoStats(stats, statsName);
+                    break;
+                case 2:
+                    
+                    break;
+            
+                default:
+                    System.out.println("Please enter a valid option.");
+                    break;
+            }
+        }
+        int strength=stats[0];
+        int dexterity=stats[1];
+        int constitution=stats[2];
+        int intelligence=stats[3];
+        int wisdom=stats[4];
+        int charisma=stats[5];
+        int luck=setLuck();
         double health;
         int mana;
         Armes activeWeapon;
     }
+
+    public void autoStats(int[] stats,String[] statsName) {
+        int leftPoints=60;
+        boolean validPoints=false;
+        while (leftPoints!=0) {
+            for (int i=0;i<stats.length;i++) {
+                validPoints=false;
+                while (!validPoints) {
+                    int randNum=(int)(Math.random()*leftPoints)+1;
+                    if (randNum>=5&&randNum<=20) {
+                        stats[i]=+randNum;
+                        validPoints=true;
+                    }
+                }
+            }
+        }
+        for (int i=0;i<statsName.length;i++) {
+            System.out.println(statsName[i]+" have been set to "+stats[i]);
+        }
+    }
+
+    public int setLuck() {
+        int luck=(int)(Math.random()*3)+1;
+        return luck;
+    }
+    // 1Luck -> 1/5 to 2x damage
+    // 2Luck -> 1/4 to 2x damage
+    // 3Luck -> 1/3 to 2x damage
 
     public double setDefaultHealth(int constitution) {
         double health=constitution*50;

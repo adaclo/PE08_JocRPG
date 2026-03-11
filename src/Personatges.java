@@ -60,10 +60,6 @@ public class Personatges {
     public double getHealth() {
         return this.health;
     }
-
-    public void setDefaultHealth() {
-        this.health=this.constitution*50;
-    }
     
     public void setMana(int mana) {
         this.mana=mana;
@@ -137,11 +133,9 @@ public class Personatges {
     }
     
     public void setLuck(int luck) {
-        this.luck=(int)(Math.random()*3)+1; 
+        this.luck=luck;
     }
-    // 1Luck -> 1/5 to 2x damage
-    // 2Luck -> 1/4 to 2x damage
-    // 3Luck -> 1/3 to 2x damage
+    
     public int getLuck() {
         return this.luck;
     }
