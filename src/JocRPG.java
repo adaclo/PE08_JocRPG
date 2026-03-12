@@ -68,6 +68,8 @@ public class JocRPG {
             enemy=1;
         int opt=0;
         boolean validOpt=false;
+        characters[p].regenHealth();
+        characters[p].regenMana();
         while(!validOpt) {
             System.out.println("Its turn of player"+p);
             System.out.println("Player"+p+" stats:");

@@ -227,6 +227,16 @@ public class Personatges {
         }
     }
 
+    public void regenMana() {
+        int maxMana=this.intelligence*30;
+        int expectedMana=this.mana+this.intelligence*2;
+        if (expectedMana>maxMana) { // set health to max because it exceeds
+            setMana(maxMana);
+        } else {
+            setMana(expectedMana);
+        }
+    }
+
     public String toString() {
         String info="";
         info="ID="+this.ID+"\nType="+this.type+"\nName="+this.name+"\nAge="+this.age+"\nHealth="+this.health+"\nMana="+this.mana+"\nStrength="+this.strength+"\nDexterity="+this.dexterity+"\nConstitution="+this.constitution+"\nIntelligence="+this.intelligence+"\nWisdom="+this.wisdom+"\nLuck="+this.luck+"\nCharisma="+this.charisma+"\nWeapon="+this.activeWeapon;
