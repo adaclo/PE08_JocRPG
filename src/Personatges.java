@@ -1,4 +1,5 @@
 package Activitats.PE08_AcarretaAdrian.src;
+import java.util.ArrayList;
 
 public class Personatges {
     private int ID;
@@ -15,12 +16,14 @@ public class Personatges {
     private int charisma;
     private int luck;
     private Armes activeWeapon;
+    private ArrayList<Armes> inventory;
+    private boolean isDefending;
 
     public Personatges() {
 
     }
 
-    public Personatges(int ID,String type,String name,int age,double health,int mana,int strength,int dexterity,int constitution,int intelligence,int wisdom,int charisma,int luck,Armes activeWeapon) {
+    public Personatges(int ID,String type,String name,int age,double health,int mana,int strength,int dexterity,int constitution,int intelligence,int wisdom,int charisma,int luck) {
         this.ID=ID;
         this.type=type;
         this.name=name;
@@ -34,7 +37,6 @@ public class Personatges {
         this.wisdom=wisdom;
         this.charisma=charisma;
         this.luck=luck;
-        this.activeWeapon=activeWeapon;
     }
     
     public void setID(int ID) {
@@ -147,6 +149,10 @@ public class Personatges {
     public Armes getActiveWeapon() {
         return this.activeWeapon;
     }
+
+    public void addWeapon(Armes weapon) {
+        this.inventory.add(weapon);
+    }
     
     public void setLuck(int luck) {
         this.luck=luck;
@@ -156,9 +162,32 @@ public class Personatges {
         return this.luck;
     }
 
-    public int calcDamage(int damage) {
-        if (didDodge())
-            damage=0;
+    public void setDefending(boolean isDefending) {
+        this.isDefending=isDefending;
+    }
+
+    public boolean getDefending() {
+        return this.isDefending;
+    }
+
+    public void attack(Personatges enemy) {
+        if (!enemy.didDodge()) {
+            double damage=calcDamage();
+            if (enemy.getDefending()) {
+                damage=damage/2;
+                enemy.setDefending(false);
+            }
+            enemy.setHealth(enemy.getHealth()-damage);
+        }
+    }
+
+    public double calcDamage() {
+        double damage=0;
+        if (!this.activeWeapon.getIsMagic()) {
+            damage=strength*(1+this.activeWeapon.getDamage()/100);
+        } else {
+            damage=activeWeapon.getDamage()*this.intelligence/100;
+        }
         if (calcLuck())
             damage=damage*2;
         return damage;

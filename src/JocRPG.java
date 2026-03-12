@@ -46,8 +46,64 @@ public class JocRPG {
     public void startGame(ArrayList<Personatges>allCaracters,ArrayList<Armes>allWeapons) {
         String[] players = new String[2];
         Personatges[] characters = new Personatges[2];
+        boolean end=false;
         choosePlayers(players);
         chooseCharacters(players,characters,allCaracters,allWeapons);
+        while(!end) {
+            for(int p=0;p<players.length;p++) {
+                while(characters[p].getHealth()>0) {
+                    newTurn(allCaracters, allWeapons, p, characters, players);
+                }
+                if (characters[p].getHealth()==0) {
+                    System.out.println("Player"+p+" has lost...");
+                    end=true;
+                }
+            }
+        }
+    }
+
+    public void newTurn(ArrayList<Personatges>allCharacters,ArrayList<Armes>allWeapons,int p,Personatges[] characters,String[] players) {
+        int enemy=0;
+        if (p==0) 
+            enemy=1;
+        int opt=0;
+        boolean validOpt=false;
+        while(!validOpt) {
+            System.out.println("Its turn of player"+p);
+            System.out.println("Player"+p+" stats:");
+            System.out.println(characters[p].toString());
+            System.out.println("------------------------");
+            System.out.println("Weapon info:");
+            System.out.println(characters[p].getActiveWeapon().toString());
+            System.out.println("------------------------");
+            System.out.println("Enemy stats:");
+            System.out.println(characters[enemy].toString());
+            System.out.println("------------------------");
+            System.out.println("(1) Change weapon");
+            System.out.println("(2) Attack");
+            System.out.println("(3) Defense next turn");
+            System.out.print("\nChoose: ");
+            opt=readInt();
+            switch (opt) {
+                case 1:
+                    characters[p].setActiveWeapon(chooseWeapon(allWeapons, characters[p]));
+                    validOpt=true;
+                    break;
+                case 2:
+                    characters[p].attack(characters[enemy]);
+                    validOpt=true;
+                    break;
+                case 3:
+                    characters[p].setDefending(true);
+                    validOpt=true;
+                    break;
+            
+                default:
+                    System.out.println("Please enter a valid option");
+                    break;
+            }
+        }
+
     }
 
     public void chooseCharacters(String[] players,Personatges[] characters,ArrayList<Personatges>allCharacters,ArrayList<Armes>allWeapos) {
@@ -59,7 +115,11 @@ public class JocRPG {
             boolean found=false;
             while(!found&&index<allCharacters.size()) {
                 if (allCharacters.get(index).getID()==id) {
-                    characters[p]=allCharacters.get(index);
+                    if (id!=characters[0].getID()||id!=characters[1].getID()) {
+                        characters[p]=allCharacters.get(index);
+                    } else {
+                        System.out.println("You cannot choose the same character!");
+                    }
                     found=true;
                 }
             }
@@ -122,21 +182,22 @@ public class JocRPG {
         int luck=setLuck();
         double health=setDefaultHealth(constitution);
         int mana=setDefaultMana(intelligence);
-        Armes activeWeapon=allWeapons.get(chooseWeapon(allWeapons));
+        Personatges c = new Personatges(cID, type, name, age, health, mana, strength, dexterity, constitution, intelligence, wisdom, charisma, luck);
+        Armes activeWeapon=chooseWeapon(allWeapons,c);
         if (activeWeapon.getIsMagic()&&intelligence<10) {
             do {
                 System.out.println("Can't choose that weapon, only non magic because of your intelligence: "+intelligence);
-                activeWeapon=allWeapons.get(chooseWeapon(allWeapons));
+                activeWeapon=chooseWeapon(allWeapons,c);
             } while(!activeWeapon.getIsMagic());
         }
-        Personatges c = new Personatges(cID, type, name, age, health, mana, strength, dexterity, constitution, intelligence, wisdom, charisma, luck, activeWeapon);
+        c.setActiveWeapon(activeWeapon);
         allCharacters.add(c);
         cID++;
     }
 
-    public int chooseWeapon(ArrayList<Armes>allWeapons) {
+    public Armes chooseWeapon(ArrayList<Armes>allWeapons,Personatges c) {
         int id=0;
-        int weapon=0;
+        Armes weapon=new Armes();
         int index=0;
         boolean found=false;
         if (allWeapons.size()!=0) {
@@ -146,7 +207,9 @@ public class JocRPG {
                 System.out.print("\nDo you want to create a new weapon? (y/n): ");
                 String var=s.nextLine();
                 if(var.equalsIgnoreCase("y")) {
-                    weapon=makeWeapon(allWeapons);
+                    weapon=makeWeapon();
+                    allWeapons.add(weapon);
+                    c.addWeapon(weapon);
                     validOpt=true;
                 } else if (var.equalsIgnoreCase("n")) {
                     showWeapons(allWeapons);
@@ -154,7 +217,7 @@ public class JocRPG {
                     id=readInt();
                     while (!found&&index<allWeapons.size()) {
                         if (allWeapons.get(index).getID()==id) {
-                            weapon=id;
+                            weapon=allWeapons.get(id);
                             found=true;
                         } else {index++;}
                     }
@@ -162,22 +225,22 @@ public class JocRPG {
                 }
             }
         } else {
-            weapon=makeWeapon(allWeapons); //auto create because no weapon created
+            weapon=makeWeapon(); //auto create because no weapon created
+            c.addWeapon(weapon);
+            allWeapons.add(weapon);
         }
         return weapon;
     }
 
-    public int makeWeapon(ArrayList<Armes>allWeapons) {
-        int id=0;
+    public Armes makeWeapon() {
         String type=chooseWeaponType();
         double damage=(int)(Math.random()*100)+1;
         boolean isMagic=false;
         if(type.equalsIgnoreCase("wand"))
             isMagic=true;
         Armes w = new Armes(wID, type, damage, isMagic);
-        allWeapons.add(w);
         wID++;
-        return id;
+        return w;
     }
 
     public String chooseWeaponType() {
@@ -254,23 +317,33 @@ public class JocRPG {
     public void autoStats(int[] stats,String[] statsName) {
         int leftPoints=60;
         boolean validPoints=false;
-        while (leftPoints!=0) {
-            for (int i=0;i<stats.length;i++) {
-                validPoints=false;
-                while (!validPoints&&leftPoints!=0) {
-                    int randNum=(int)(Math.random()*leftPoints)+1;
-                    System.out.println("LEFT"+leftPoints);
-                    System.out.println("NUM"+randNum);
-                    System.out.println("TOTAL"+(randNum+stats[i])+statsName[i]);
-                    if (randNum+stats[i]>=5&&randNum+stats[i]<=20&&leftPoints-randNum>=0) {
-                        stats[i]+=randNum;
-                        validPoints=true;
-                        leftPoints=leftPoints-randNum;
-                    } else if (leftPoints<5) {
-                        int randomStat=(int)(Math.random()*6)+1;
-                        stats[randomStat]+=leftPoints;
-                        validPoints=true;
-                        leftPoints=0;
+        boolean validStats=false;
+        while (!validStats) {
+            while (leftPoints!=0) {
+                for (int i=0;i<stats.length;i++) {
+                    validPoints=false;
+                    while (!validPoints&&leftPoints!=0) {
+                        int randNum=(int)(Math.random()*leftPoints)+1;
+                        System.out.println("LEFT"+leftPoints);
+                        System.out.println("NUM"+randNum);
+                        System.out.println("TOTAL"+(randNum+stats[i])+statsName[i]);
+                        if (randNum+stats[i]>=5&&randNum+stats[i]<=20&&leftPoints-randNum>=0) {
+                            stats[i]+=randNum;
+                            validPoints=true;
+                            leftPoints=leftPoints-randNum;
+                        } else if (stats[i]==20) {
+                            validPoints=true;
+                        }
+                    }
+                }
+                for (int i=0;i<stats.length;i++) {
+                    if (stats[i]<5) {
+                        leftPoints=60;
+                        for (int j=0;j<stats.length;j++) {
+                            stats[j]=0;
+                        }
+                    } else {
+                        validStats=true;
                     }
                 }
             }
