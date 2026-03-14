@@ -16,7 +16,7 @@ public class Personatges {
     private int charisma;
     private int luck;
     private Armes activeWeapon;
-    private ArrayList<Armes> inventory;
+    private ArrayList<Armes> inventory = new ArrayList<Armes>();
     private boolean isDefending;
 
     public Personatges() {

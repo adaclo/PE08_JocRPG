@@ -30,7 +30,7 @@ public class JocRPG {
                     makeCharacter(allCharacters, allWeapons);
                     break;
                 case 2:
-                    
+                    startGame(allCharacters, allWeapons);
                     break;
                 case 0:
                     System.out.println("Exiting...");
@@ -117,27 +117,24 @@ public class JocRPG {
             boolean found=false;
             while(!found&&index<allCharacters.size()) {
                 if (allCharacters.get(index).getID()==id) {
-                    if (id!=characters[0].getID()||id!=characters[1].getID()) {
-                        characters[p]=allCharacters.get(index);
-                    } else {
-                        System.out.println("You cannot choose the same character!");
-                    }
+                    characters[p]=allCharacters.get(index);
                     found=true;
-                }
+                } else {index++;}
             }
         }
     }
 
     public void choosePlayers(String[] players) {
         String var="";
+        s.nextLine();
         do{
             for (int i=0;i<players.length;i++) {
-                System.out.print("Choose a name for the player"+i+": ");
+                System.out.print("\nChoose a name for the player"+i+": ");
                 players[i]=s.nextLine();
             }
             System.out.print("\nAre you sure '"+players[0]+"' and '"+players[1]+"' are the names? (y/n): ");
             var=s.nextLine();
-        } while(var.equalsIgnoreCase("y"));
+        } while(!var.equalsIgnoreCase("y"));
     }
 
     public void showCharacter(ArrayList<Personatges> allCharects) {
@@ -316,42 +313,44 @@ public class JocRPG {
         }
     }
 
-    public void autoStats(int[] stats,String[] statsName) {
-        int leftPoints=60;
-        boolean validPoints=false;
-        boolean validStats=false;
+    public void autoStats(int[] stats, String[] statsName) {
+        boolean validStats = false;
         while (!validStats) {
-            while (leftPoints!=0) {
-                for (int i=0;i<stats.length;i++) {
-                    validPoints=false;
-                    while (!validPoints&&leftPoints!=0) {
-                        int randNum=(int)(Math.random()*leftPoints)+1;
-                        System.out.println("LEFT"+leftPoints);
-                        System.out.println("NUM"+randNum);
-                        System.out.println("TOTAL"+(randNum+stats[i])+statsName[i]);
-                        if (randNum+stats[i]>=5&&randNum+stats[i]<=20&&leftPoints-randNum>=0) {
-                            stats[i]+=randNum;
-                            validPoints=true;
-                            leftPoints=leftPoints-randNum;
-                        } else if (stats[i]==20) {
-                            validPoints=true;
-                        }
-                    }
-                }
-                for (int i=0;i<stats.length;i++) {
-                    if (stats[i]<5) {
-                        leftPoints=60;
-                        for (int j=0;j<stats.length;j++) {
-                            stats[j]=0;
-                        }
-                    } else {
-                        validStats=true;
+
+            int leftPoints = 60;
+
+            for (int i = 0; i < stats.length; i++) {
+                stats[i] = 0;
+            }
+
+            while (leftPoints > 0) {
+
+                for (int i = 0; i < stats.length && leftPoints > 0; i++) {
+
+                    int randNum = (int)(Math.random()*5)+1;
+
+                    if (stats[i] + randNum <= 20 && leftPoints - randNum >= 0) {
+
+                        stats[i] += randNum;
+                        leftPoints -= randNum;
+
                     }
                 }
             }
+
+            validStats = true;
+
+            for (int i = 0; i < stats.length; i++) {
+
+                if (stats[i] < 5) {
+                    validStats = false;
+                    break;
+                }
+            }
         }
-        for (int i=0;i<statsName.length;i++) {
-            System.out.println(statsName[i]+" have been set to "+stats[i]);
+
+        for (int i = 0; i < statsName.length; i++) {
+            System.out.println(statsName[i] + " have been set to " + stats[i]);
         }
     }
 
