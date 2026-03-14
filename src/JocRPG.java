@@ -51,10 +51,10 @@ public class JocRPG {
         chooseCharacters(players,characters,allCaracters,allWeapons);
         while(!end) {
             for(int p=0;p<players.length;p++) {
-                while(characters[p].getHealth()>0) {
+                if(characters[p].getHealth()>0) {
                     newTurn(allCaracters, allWeapons, p, characters, players);
                 }
-                if (characters[p].getHealth()==0) {
+                if (characters[p].getHealth()<=0) {
                     System.out.println("Player"+p+" has lost...");
                     end=true;
                 }
