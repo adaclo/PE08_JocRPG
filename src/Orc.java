@@ -12,4 +12,20 @@ public class Orc extends Personatges {
             stat+=1;
         return stat;
     }
+
+    @Override
+    public boolean setActiveWeapon(Armes activeWeapon) {
+        boolean didChange=false;
+        if (activeWeapon.getIsMagic()) {
+            System.out.println("Orcs cannot equip magic weapons");
+        } else {
+            didChange=super.setActiveWeapon(activeWeapon);
+        }
+        return didChange;
+    }
+
+    @Override
+    public double calcDamage() {
+        return super.calcDamage()*1.1;
+    }
 }

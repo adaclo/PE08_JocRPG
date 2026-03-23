@@ -12,4 +12,15 @@ public class Elf extends Personatges{
             stat=20;
         return stat;
     }
+
+    @Override
+    public void regenMana() {
+        int maxMana=getIntelligence()*30;
+        int expectedMana=getMana()+getIntelligence()*3;
+        if (expectedMana>maxMana) {
+            setMana(maxMana);
+        } else {
+            setMana(expectedMana);
+        }
+    }
 }

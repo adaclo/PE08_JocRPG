@@ -181,15 +181,22 @@ public class JocRPG {
         int luck=setLuck();
         double health=setDefaultHealth(constitution);
         int mana=setDefaultMana(intelligence);
-        Personatges c = new Personatges(cID, type, name, age, health, mana, strength, dexterity, constitution, intelligence, wisdom, charisma, luck);
-        Armes activeWeapon=chooseWeapon(allWeapons,c);
-        if (activeWeapon.getIsMagic()&&intelligence<10) {
-            do {
-                System.out.println("Can't choose that weapon, only non magic because of your intelligence: "+intelligence);
-                activeWeapon=chooseWeapon(allWeapons,c);
-            } while(!activeWeapon.getIsMagic());
+        Personatges c;
+        if (type.equalsIgnoreCase("Human")) {
+            c = new Human(cID, type, name, age, health, mana, strength, dexterity, constitution, intelligence, wisdom, charisma, luck);
+        } else if (type.equalsIgnoreCase("Elf")) {
+            c = new Elf(cID, type, name, age, health, mana, strength, dexterity, constitution, intelligence, wisdom, charisma, luck);
+        } else if (type.equalsIgnoreCase("Orc")) {
+            c = new Orc(cID, type, name, age, health, mana, strength, dexterity, constitution, intelligence, wisdom, charisma, luck);
+        } else {
+            c = new Dwarf(cID, type, name, age, health, mana, strength, dexterity, constitution, intelligence, wisdom, charisma, luck);
         }
-        c.setActiveWeapon(activeWeapon);
+        c.setHealth(setDefaultHealth(c.getConstitution()));
+        c.setMana(setDefaultMana(c.getIntelligence()));
+        Armes activeWeapon=chooseWeapon(allWeapons,c);
+        while (!c.setActiveWeapon(activeWeapon)) {
+            activeWeapon=chooseWeapon(allWeapons,c);
+        }
         allCharacters.add(c);
         cID++;
     }
