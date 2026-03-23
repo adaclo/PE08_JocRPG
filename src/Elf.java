@@ -8,7 +8,7 @@ public class Elf extends Personatges{
     public static int adjustStat(int stat) {
         if ((stat+2)<=20)
             stat+=2;
-        else 
+        else
             stat=20;
         return stat;
     }
